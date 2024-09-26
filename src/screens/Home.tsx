@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { users } from "../db";
 
 function Home() {
+  console.log(useOutletContext());
   return (
     <div>
       <h1>Users</h1>
