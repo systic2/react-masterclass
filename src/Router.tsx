@@ -6,9 +6,11 @@ import Root from "./Root";
 import NotFound from "./screens/NotFound";
 import ErrorComponent from "./components/ErrorComponent";
 import User from "./screens/users/User";
-import Followers from './screens/users/Followers';
-import Coins from './screens/Coins';
-import Coin from './screens/Coin';
+import Followers from "./screens/users/Followers";
+import Coins from "./screens/Coins";
+import Coin from "./screens/Coin";
+import Price from "./screens/Price";
+import Chart from "./screens/Chart";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,18 @@ const router = createBrowserRouter([
       {
         path: ":coinId",
         element: <Coin />,
+        children: [
+          {
+            path: "price",
+            element: <Price />,
+            errorElement: <ErrorComponent />,
+          },
+          {
+            path: "chart",
+            element: <Chart />,
+            errorElement: <ErrorComponent />,
+          },
+        ],
       },
       {
         path: "users/:userId",
@@ -31,9 +45,8 @@ const router = createBrowserRouter([
           {
             path: "followers",
             element: <Followers />,
-            
-          }
-        ]
+          },
+        ],
       },
     ],
     errorElement: <NotFound />,
