@@ -3,6 +3,7 @@ import Router from "./Router";
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import { createGlobalStyle } from "styled-components";
+import { ReactQueryDevtools } from "react-query-devtools"
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -79,6 +80,7 @@ function Root() {
     <>
       <GlobalStyle />
       <Outlet context={{ darkmode: true }} />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
