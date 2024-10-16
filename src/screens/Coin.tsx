@@ -11,8 +11,8 @@ import {
 import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { useQuery } from 'react-query';
-import { fetchCoinInfo, fetchCoinTickers } from '../api';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -152,8 +152,14 @@ function Coin() {
   const { state } = useLocation();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-  const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-  const {isLoading: tickersLoading, data: tickersData} = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId)
+  );
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
   // const [priceInfo, setPriceInfo] = useState<PriceData>();
@@ -171,7 +177,7 @@ function Coin() {
   //   })();
   // }, []);
   // console.log(priceMatch);
-  const loading = infoLoading || tickersLoading
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
       <Header>
