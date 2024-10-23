@@ -7,6 +7,7 @@ import {
   Routes,
   useLocation,
   useMatch,
+  useOutletContext,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -99,6 +100,11 @@ interface RouteState {
   name: string;
 }
 
+interface ICoinProps {
+  toggleDark: () => void;
+  isDark: boolean;
+}
+
 interface InfoData {
   id: string;
   name: string;
@@ -167,23 +173,7 @@ function Coin() {
     ["tickers", coinId],
     () => fetchCoinTickers(coinId)
   );
-  // const [loading, setLoading] = useState(true);
-  // const [info, setInfo] = useState<InfoData>();
-  // const [priceInfo, setPriceInfo] = useState<PriceData>();
-  // useEffect(() => {
-  //   (async () => {
-  //     const infoData = await (
-  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-  //     ).json();
-  //     const priceData = await (
-  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-  //     ).json();
-  //     setInfo(infoData);
-  //     setPriceInfo(priceData);
-  //     setLoading(false);
-  //   })();
-  // }, []);
-  // console.log(priceMatch);
+  const { isDark, toggleDark } = useOutletContext<ICoinProps>();
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
@@ -236,7 +226,7 @@ function Coin() {
               <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
           </Tabs>
-          <Outlet context={{ coinId }} />
+          <Outlet context={{ coinId, isDark, toggleDark }} />
         </>
       )}
     </Container>
