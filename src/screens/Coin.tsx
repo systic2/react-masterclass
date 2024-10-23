@@ -23,9 +23,15 @@ const Container = styled.div`
 
 const Header = styled.header`
   height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  a {
+    display: inline;
+    grid-column: 1 / 4;
+  }
+  h1 {
+    grid-column: 2 / 4;
+    justify-content: center;
+  }
 `;
 
 const Overview = styled.div`
@@ -159,10 +165,7 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId),
-    {
-      refetchInterval: 5000,
-    }
+    () => fetchCoinTickers(coinId)
   );
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
@@ -190,6 +193,8 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <Link to={"/"}>뒤로</Link>
+
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
