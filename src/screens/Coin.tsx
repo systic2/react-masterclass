@@ -15,6 +15,8 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { useQuery } from "react-query";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -173,7 +175,6 @@ function Coin() {
     ["tickers", coinId],
     () => fetchCoinTickers(coinId)
   );
-  const { isDark, toggleDark } = useOutletContext<ICoinProps>();
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
@@ -184,7 +185,6 @@ function Coin() {
       </Helmet>
       <Header>
         <Link to={"/"}>뒤로</Link>
-
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
@@ -226,7 +226,7 @@ function Coin() {
               <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
           </Tabs>
-          <Outlet context={{ coinId, isDark, toggleDark }} />
+          <Outlet context={{ coinId }} />
         </>
       )}
     </Container>
