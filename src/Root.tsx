@@ -1,13 +1,6 @@
-import React, { useState } from "react";
-import Router from "./Router";
+import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "./components/Header";
 import { createGlobalStyle } from "styled-components";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./theme";
-import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "./atoms";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -80,14 +73,10 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Root() {
-  const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <Outlet context={{ darkmode: true }} />
-        <ReactQueryDevtools initialIsOpen={true} />
-      </ThemeProvider>
+      <GlobalStyle />
+      <Outlet />
     </>
   );
 }
