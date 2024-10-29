@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import ToDoList from "./ToDoList";
+import ToDoList from "./components/ToDoList";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
