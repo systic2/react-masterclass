@@ -11,6 +11,12 @@ function ToDo({ text, category, id }: IToDo) {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
       const oldToDo = oldToDos[targetIndex];
       const newToDo = { text: text, id: id, category: name as any };
+      if (name === "DEL") {
+        return [
+          ...oldToDos.slice(0, targetIndex),
+          ...oldToDos.slice(targetIndex + 1),
+        ];
+      }
       return [
         ...oldToDos.slice(0, targetIndex),
         newToDo,
@@ -36,6 +42,9 @@ function ToDo({ text, category, id }: IToDo) {
           Done
         </button>
       )}
+      <button name="DEL" onClick={onClick}>
+        Delete
+      </button>
     </li>
   );
 }
