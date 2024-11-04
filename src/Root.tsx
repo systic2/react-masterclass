@@ -1,7 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import ToDoList from "./components/ToDoList";
+import { hourSelector, minutesState } from "./atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -74,10 +75,23 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Root() {
+  const [minutes, setMinutes] = useRecoilState(minutesState);
+  const hours = useRecoilValue(hourSelector);
+  const onMinutesChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setMinutes(+event.currentTarget.value);
+  };
   return (
     <>
       <GlobalStyle />
-      <ToDoList />
+      <div>
+        <input
+          value={minutes}
+          onChange={onMinutesChange}
+          type="number"
+          placeholder="Minutes"
+        />
+        <input value={hours} type="number" placeholder="Hours" />
+      </div>
       <Outlet />
     </>
   );
