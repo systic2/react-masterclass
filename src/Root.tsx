@@ -1,8 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import { hourSelector, minutesState } from "./atoms";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -75,31 +74,25 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Root() {
-  const [minutes, setMinutes] = useRecoilState(minutesState);
-  const [hours, setHours] = useRecoilState(hourSelector);
-  const onMinutesChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setMinutes(+event.currentTarget.value);
-  };
-  const onHoursChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setHours(+event.currentTarget.value);
-  };
   return (
     <>
       <GlobalStyle />
-      <div>
-        <input
-          value={minutes}
-          onChange={onMinutesChange}
-          type="number"
-          placeholder="Minutes"
-        />
-        <input
-          value={hours}
-          onChange={onHoursChange}
-          type="number"
-          placeholder="Hours"
-        />
-      </div>
+      <DragDropContext onDragEnd={() => {}}>
+        <div>
+          <Droppable droppableId="one">
+            {() => (
+              <ul>
+                <Draggable draggableId="first" index={0}>
+                  {() => <li>One</li>}
+                </Draggable>
+                <Draggable draggableId="second" index={1}>
+                  {() => <li>Two</li>}
+                </Draggable>
+              </ul>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
       <Outlet />
     </>
   );
