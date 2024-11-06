@@ -80,13 +80,15 @@ function Root() {
       <DragDropContext onDragEnd={() => {}}>
         <div>
           <Droppable droppableId="one">
-            {() => (
-              <ul>
+            {(magic) => (
+              <ul ref={magic.innerRef} {...magic.droppableProps}>
                 <Draggable draggableId="first" index={0}>
-                  {() => <li>One</li>}
-                </Draggable>
-                <Draggable draggableId="second" index={1}>
-                  {() => <li>Two</li>}
+                  {(magic) => (
+                    <li ref={magic.innerRef} {...magic.draggableProps}>
+                      <span {...magic.dragHandleProps}>👍</span>
+                      One
+                    </li>
+                  )}
                 </Draggable>
               </ul>
             )}
