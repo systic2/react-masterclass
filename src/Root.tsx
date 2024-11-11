@@ -9,6 +9,7 @@ import {
 } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import { toDoState } from "./atoms";
+import DraggableCard from "./Components/DraggableCard";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -104,13 +105,6 @@ const Board = styled.div`
   min-height: 200px;
 `;
 
-const Card = styled.div`
-  border-radius: 5px;
-  margin-bottom: 5px;
-  padding: 10px 10px;
-  background-color: ${(props) => props.theme.cardColor};
-`;
-
 function Root() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
@@ -135,17 +129,7 @@ function Root() {
               {(magic) => (
                 <Board ref={magic.innerRef} {...magic.droppableProps}>
                   {toDos.map((toDo, index) => (
-                    <Draggable key={toDo} draggableId={toDo} index={index}>
-                      {(magic) => (
-                        <Card
-                          ref={magic.innerRef}
-                          {...magic.dragHandleProps}
-                          {...magic.draggableProps}
-                        >
-                          {toDo}
-                        </Card>
-                      )}
-                    </Draggable>
+                    <DraggableCard key={toDo} toDo={toDo} index={index} />
                   ))}
                   {magic.placeholder}
                 </Board>
