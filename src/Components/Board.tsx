@@ -3,7 +3,7 @@ import DraggableCard from "./DraggableCard";
 import styled from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { IToDo, toDoState } from "../atoms";
+import { IToDo, IToDoState, toDoState } from "../atoms";
 import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
@@ -73,16 +73,28 @@ function Board({ toDos, boardId }: IBoardProps) {
 
     setValue("toDo", "");
   };
+  const onDeleteBoard = () => {
+    setToDos((prev) => {
+      const newState = { ...prev };
+      delete newState[boardId];
+      return newState;
+    });
+  };
   return (
     <Wrapper>
       <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
-        <input
-          {...register("toDo", { required: true })}
-          type="text"
-          placeholder={`Add task on ${boardId}`}
-        />
-      </Form>
+      {boardId !== "Trash" && (
+        <>
+          <button onClick={onDeleteBoard}>Delete Board</button>
+          <Form onSubmit={handleSubmit(onValid)}>
+            <input
+              {...register("toDo", { required: true })}
+              type="text"
+              placeholder={`Add task on ${boardId}`}
+            />
+          </Form>
+        </>
+      )}
       <Droppable droppableId={boardId}>
         {(magic, info) => (
           <Area

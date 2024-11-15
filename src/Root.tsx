@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
-import { toDoState } from "./atoms";
+import { toDoState, trashToDoState } from "./atoms";
 import Board from "./Components/Board";
+import { useForm } from "react-hook-form";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -93,8 +94,32 @@ const Boards = styled.div`
   gap: 10px;
 `;
 
+const Title = styled.h2`
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 18px;
+`;
+
+const Form = styled.form`
+  width: 400px;
+  input {
+    width: 100%;
+  }
+`;
+
+interface IForm {
+  boardTitle: string;
+}
+
+//Todo
+//1. to do 삭제위한 쓰레기통 만들기 ok
+//2. 저장한 todo 불러오기 ok
+//3. 내가 직접 board 만들기
 function Root() {
   const [toDos, setToDos] = useRecoilState(toDoState);
+  const [trashToDos, setTrashToDos] = useRecoilState(trashToDoState);
+  const { register, setValue, handleSubmit } = useForm<IForm>();
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { destination, draggableId, source } = info;
@@ -112,7 +137,16 @@ function Root() {
         };
       });
     }
-    if (destination.droppableId !== source.droppableId) {
+    if (destination.droppableId === "Trash") {
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    } else if (destination.droppableId !== source.droppableId) {
       // cross board movement
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
@@ -128,15 +162,48 @@ function Root() {
       });
     }
   };
+  const onValid = ({ boardTitle }: IForm) => {
+    setToDos((allBoards) => {
+      return {
+        ...allBoards,
+        [boardTitle]: [],
+      };
+    });
+    setValue("boardTitle", "");
+  };
+  useEffect(() => {
+    const localToDos = localStorage.getItem("toDos");
+    if (localToDos) {
+      setToDos(JSON.parse(localToDos));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("toDos", JSON.stringify(toDos));
+  }, [toDos]);
   return (
     <>
       <GlobalStyle />
       <DragDropContext onDragEnd={onDragEnd}>
+        <Title>Create Board</Title>
+        <Form onSubmit={handleSubmit(onValid)}>
+          <input
+            type="text"
+            placeholder="new board title"
+            {...register("boardTitle", { required: true })}
+          />
+        </Form>
         <Wrapper>
           <Boards>
             {Object.keys(toDos).map((boardId) => (
               <Board key={boardId} boardId={boardId} toDos={toDos[boardId]} />
             ))}
+          </Boards>
+          <Boards>
+            <Board
+              key={"trash"}
+              boardId={"Trash"}
+              toDos={trashToDos["Trash"]}
+            />
           </Boards>
         </Wrapper>
       </DragDropContext>

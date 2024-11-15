@@ -5,7 +5,7 @@ export interface IToDo {
   text: string;
 }
 
-interface IToDoState {
+export interface IToDoState {
   [key: string]: IToDo[];
 }
 
@@ -18,5 +18,12 @@ export const toDoState = atom<IToDoState>({
     ],
     Doing: [],
     Done: [],
+  },
+});
+
+export const trashToDoState = atom<IToDoState>({
+  key: "trashToDo",
+  default: {
+    Trash: [],
   },
 });
