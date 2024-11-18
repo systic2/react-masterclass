@@ -1,11 +1,5 @@
-import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
-import { toDoState, trashToDoState } from "./atoms";
-import Board from "./Components/Board";
-import { useForm } from "react-hook-form";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -78,135 +72,28 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Wrapper = styled.div`
-  display: flex;
   width: 100vw;
-  margin: 0 auto;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
-`;
-
-const Boards = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  gap: 10px;
 `;
 
-const Title = styled.h2`
-  text-align: left;
-  font-weight: 600;
-  margin-bottom: 10px;
-  font-size: 18px;
+const Box = styled.div`
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const Form = styled.form`
-  width: 400px;
-  input {
-    width: 100%;
-  }
-`;
-
-interface IForm {
-  boardTitle: string;
-}
-
-//Todo
-//1. to do 삭제위한 쓰레기통 만들기 ok
-//2. 저장한 todo 불러오기 ok
-//3. 내가 직접 board 만들기
 function Root() {
-  const [toDos, setToDos] = useRecoilState(toDoState);
-  const [trashToDos, setTrashToDos] = useRecoilState(trashToDoState);
-  const { register, setValue, handleSubmit } = useForm<IForm>();
-  const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, draggableId, source } = info;
-    if (!destination) return;
-    if (destination?.droppableId === source.droppableId) {
-      // same board movement.
-      setToDos((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]];
-        const taskObj = boardCopy[source.index];
-        boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination?.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: boardCopy,
-        };
-      });
-    }
-    if (destination.droppableId === "Trash") {
-      setToDos((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]];
-        boardCopy.splice(source.index, 1);
-        return {
-          ...allBoards,
-          [source.droppableId]: boardCopy,
-        };
-      });
-    } else if (destination.droppableId !== source.droppableId) {
-      // cross board movement
-      setToDos((allBoards) => {
-        const sourceBoard = [...allBoards[source.droppableId]];
-        const taskObj = sourceBoard[source.index];
-        const destinationBoard = [...allBoards[destination.droppableId]];
-        sourceBoard.splice(source.index, 1);
-        destinationBoard.splice(destination?.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: sourceBoard,
-          [destination.droppableId]: destinationBoard,
-        };
-      });
-    }
-  };
-  const onValid = ({ boardTitle }: IForm) => {
-    setToDos((allBoards) => {
-      return {
-        ...allBoards,
-        [boardTitle]: [],
-      };
-    });
-    setValue("boardTitle", "");
-  };
-  useEffect(() => {
-    const localToDos = localStorage.getItem("toDos");
-    if (localToDos) {
-      setToDos(JSON.parse(localToDos));
-    }
-  }, []);
-  useEffect(() => {
-    localStorage.setItem("toDos", JSON.stringify(toDos));
-  }, [toDos]);
   return (
     <>
       <GlobalStyle />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Title>Create Board</Title>
-        <Form onSubmit={handleSubmit(onValid)}>
-          <input
-            type="text"
-            placeholder="new board title"
-            {...register("boardTitle", { required: true })}
-          />
-        </Form>
-        <Wrapper>
-          <Boards>
-            {Object.keys(toDos).map((boardId) => (
-              <Board key={boardId} boardId={boardId} toDos={toDos[boardId]} />
-            ))}
-          </Boards>
-          <Boards>
-            <Board
-              key={"trash"}
-              boardId={"Trash"}
-              toDos={trashToDos["Trash"]}
-            />
-          </Boards>
-        </Wrapper>
-      </DragDropContext>
+      <Wrapper>
+        <Box />
+      </Wrapper>
       <Outlet />
     </>
   );
