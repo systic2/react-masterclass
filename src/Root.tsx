@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
+import { motion } from "framer-motion";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -95,6 +96,8 @@ function Root() {
       <GlobalStyle />
       <Wrapper>
         <Box />
+        <div></div>
+        <motion.div></motion.div>
       </Wrapper>
       <Outlet />
     </>
