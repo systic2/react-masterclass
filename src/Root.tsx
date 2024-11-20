@@ -1,9 +1,6 @@
 import { Outlet } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
-import { motion } from "framer-motion";
-import { hover } from "@testing-library/user-event/dist/hover";
-import { click } from "@testing-library/user-event/dist/click";
-import { useRef } from "react";
+import { motion, useMotionValue } from "framer-motion";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -85,16 +82,6 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const BiggerBox = styled.div`
-  width: 600px;
-  height: 600px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Box = styled(motion.div)`
   width: 200px;
   height: 200px;
@@ -103,28 +90,13 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants = {
-  hover: { scale: 1.5, rotateZ: 90 },
-  click: { borderRadius: "100px", scale: 1 },
-};
-
 function Root() {
-  const biggerBoxRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
   return (
     <>
       <GlobalStyle />
       <Wrapper>
-        <BiggerBox ref={biggerBoxRef}>
-          <Box
-            drag
-            dragSnapToOrigin
-            dragElastic={0.5}
-            dragConstraints={biggerBoxRef}
-            variants={boxVariants}
-            whileHover="hover"
-            whileTap="click"
-          />
-        </BiggerBox>
+        <Box style={{ x }} drag="x" dragSnapToOrigin />
       </Wrapper>
       <Outlet />
     </>
