@@ -1,4 +1,6 @@
 function Tv() {
+  console.log("123");
+
   return <div>Tv</div>;
 }
 
