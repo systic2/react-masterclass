@@ -63,9 +63,9 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-weight: 300;
     font-family: "Source Sans 3", sans-serif;
-    color: black;
+    color: ${(props) => props.theme.white.darker};
     line-height: 1.2;
-    background: white;
+    background-color: black;
     height: 200vh;
   }
 
