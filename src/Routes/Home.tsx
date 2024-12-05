@@ -279,3 +279,9 @@ function Home() {
 }
 
 export default Home;
+
+//To Do
+//1. Show More Movies
+//2. Add Tv Shows Page
+//3. Add Search Page(Movies, TV Shows)
+//4. Movies Components More Beautiful
